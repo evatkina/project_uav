@@ -1,0 +1,6 @@
+project_uav/
+Fig/
+.idea/
+Codes/__pycache__/
+.vscode/
+testvideo/

@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  uav_streamlit_srv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'uav_streamlit'
+    image: project_uav:latest
+    restart: 'no'
+    #command: /bin/bash -c "while true; do sleep 1; done"
+    command: streamlit run app.py
+    ports:
+      - 8501:8501
+    volumes:
+      - ./testvideo:/app/testvideo
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+  
+  uav_rest_srv:
+    container_name: 'uav_rest'
+    image: project_uav:latest
+    restart: 'no'
+    #command: /bin/bash -c "while true; do sleep 1; done"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./testvideo:/app/testvideo
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
